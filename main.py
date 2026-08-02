@@ -2,6 +2,7 @@ import os
 import requests # this allows python to communicate with websites, we need this to access the data on the website and download it 
 import gzip # allows us to unzip files  
 import numpy as np
+# checking github working
 
 # file names, use of a dictionary to match the label to the file. e.g, training_images = the training images file 
 data_sources = {
