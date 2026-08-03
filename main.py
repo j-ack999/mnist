@@ -58,6 +58,14 @@ x_train, y_train, x_test, y_test = (
     mnist_dataset["test_labels"],
 )
 
+########################################
+# x_train = images for the training data 
+# x_test = images for the testing data 
+
+# y_train = labels for the training data 
+# y_test = labels for the training data 
+########################################
+
 # inspection of images
 
 import matplotlib.pyplot as plt
@@ -108,6 +116,44 @@ print(training_images[0])
 
 fig, ax = plt.subplots()
 ax.imshow(training_images[0].reshape(28,28), cmap="grey")
-plt.show()
+# plt.show()
+
+# we now know the first image in the dataset looks like a 5.
+
+## New Concept ##
+
+# One Hot Encoding is a way of storing labels as numbers without any label being seen as greater than any other label.
+# For example, since in the mnist dataset we have 10 possible labels, 0-9, we can represent a number this way: 
+# 1 = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+# 9 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+
+# very useful for the machine learning algorithm to make predictions, since we can have probabilities in this matrix: 
+
+# [0.01, 0.02, 0.05, 0.90, 0.01, 0.00, 0.00, 0.00, 0.01, 0.00] this would be saying that we are 90% sure the number is a three
+# we then compare this against the actual label, which might be: 
+# [0, 0, 0, 1, 0, 0, 0, 0, 0, 0] if the number genuinely is a 3 
+
+# the algorithm will compare the prediction to the target and use this to adjust weights later on 
+
+# one hot encoding function 
+def one_hot_encoding(labels, dimension=10):
+    # Define a one-hot variable for an all-zero vector
+    # with 10 dimensions (number labels from 0 to 9).
+    one_hot_labels = labels[..., None] == np.arange(dimension)[None]
+    # Return one-hot encoded labels.
+    return one_hot_labels.astype(np.float64)
+
+# labels = NumPy array of integer labels 
+# dimensions = ten possible classes (0-9)
+
+# use one hot encoding on both the training and test labels 
+
+# take the y's since these are the labels matched to the images (the x's)
+training_labels = one_hot_encoding(y_train[:training_sample]) # passing in the subset of training labels and hot encoding them 
+test_labels = one_hot_encoding(y_test[:training_sample]) # again taking the subset of n = 1000 at the time of writing
 
 
+
+# x_train links with y_train as a key value pair, and the same for the other pair 
+
+print(training_labels[0])
