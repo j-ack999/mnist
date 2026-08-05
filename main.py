@@ -156,4 +156,25 @@ test_labels = one_hot_encoding(y_test[:training_sample]) # again taking the subs
 
 # x_train links with y_train as a key value pair, and the same for the other pair 
 
-print(training_labels[0])
+# print(training_labels[0]) # e.g print the first label in the training set as one hot encoding - we see it is a 5 if we toggle the 6th value (5)
+
+# building the network # 
+
+seed = 884736743
+rng = np.random.default_rng(seed)
+
+def relu(x):
+    return (x >= 0 ) * x 
+    # inner bracket is simply returning zero unless the value is larger than zero
+    # e.g if the input is three, 1 is output.
+
+    # the inner bracket is the boolean part, since this comparison will give us a new 
+    # array built of true and false
+    # then when we multiply the booleans by numbers, where 0 is false and 1 is true 
+
+    # all we are doing is toggling the positives. any positive nonzero stays, else its a 0
+
+x = np.array([ -3, 1, 3, 6, 8, 0])
+
+print(x)
+print(relu(x))
