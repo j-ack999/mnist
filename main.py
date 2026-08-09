@@ -172,10 +172,46 @@ def relu(x):
     # array built of true and false
     # then when we multiply the booleans by numbers, where 0 is false and 1 is true 
 
-    # all we are doing is toggling the positives. any positive nonzero stays, else its a 0
+    # all we are doing is toggling the positives. any positive nonzero stays as is, else its a 0
 
 x = np.array([ -3, 1, 3, 6, 8, 0])
 
 print(x)
 print(relu(x))
+
+def relu2deriv(output):
+    return output >= 0
+    # derivative of the relu function which will return 1 for a positive and zero otherwise (think of it as the gradient of the input in a graphing sense)
+    # makes sense intuitively, if the relu is giving us the positives and else its a zero, we are simply seeing which neurones fired
+    # differentiate the relu -> did the neurone actually fire? 
+
+    # what is the point of having a function for calculating the derivative of the relu function in the context of a neural network? 
+    # -> updating weights so that we can have a more accurate prediction
+
+
+# neural network architecture
+# input layer (784) -> hidden layer (100) -> output layer (10)
+
+#logic? 
+# one neurone for each input pixel and one choice is generated at the output layer, that is, 0-9. hidden layer neurone count is simply a sweet spot for the problem, 
+# it is not too large nor too small so we over or underfit to the problem. computing power is also considered here. 
+
+# hyperparameters #
+
+learning_rate = 0.005
+epochs = 20 # the number of complete passes of data through the network 
+hidden_size = 100 # amount of neurones in the hidden layer of the network, not trivial, more a sweet spot 
+pixels_per_image  = 784 # amount of pixels in one image, 28 x 28 
+num_labels = 10 # number of possible labels for each image (0-9) -> used in the prediction stage of the network 
+
+# ~~~~~~~~~~~~~~ # 
+
+# weights #
+
+# weight matrices have to transform a vector from one layers size into the next layers size, the rules of matrix multiplication still apply here of course 
+
+weights_1 = 0.2 * rng.random((pixels_per_image, hidden_size)) - 0.1 # shape = (784, 100)
+weights_2 = 0.2 * rng.random((hidden_size, num_labels)) - 0.1 # shape = (100,10)
+
+# TRAINING PROCESS 
 
