@@ -58,6 +58,14 @@ x_train, y_train, x_test, y_test = (
     mnist_dataset["test_labels"],
 )
 
+########################################
+# x_train = images for the training data 
+# x_test = images for the testing data 
+
+# y_train = labels for the training data 
+# y_test = labels for the training data 
+########################################
+
 # inspection of images
 
 import matplotlib.pyplot as plt
@@ -67,8 +75,8 @@ mnist_image = x_train[image_number, :].reshape(28,28) # take a row and all of th
 
 fig, ax = plt.subplots()
 ax.imshow(mnist_image, cmap="grey") # the colourmap is grey meaning that we get a black background and greyscale image 
-plt.show()
-print("x_train matches to a y_train of: ",  y_train[image_number])
+# plt.show()
+# print("x_train matches to a y_train of: ",  y_train[image_number])
 
 
 num_examples = 5
@@ -78,9 +86,96 @@ rng = np.random.default_rng(seed)
 fig, axes = plt.subplots(1, num_examples)
 for sample, ax in zip(rng.choice(x_train, size=num_examples, replace=False), axes):
     ax.imshow(sample.reshape(28, 28), cmap="gray")
-plt.show()
+# plt.show()
 
 # fig is the whole output and axes are the individual sub plots within the figure. like the randomly picked numbers 
 
-# section 2. is next
+# print(x_train.dtype)
+
+# logic here: 
+# the data is currently in the form of unsigned integers, meaning a number between 0 and 255. We change the data type to a floating point 
+# number and divide it by 255. this gives us values between 0-1. Now we have each pixel represented as an intensity value rather than a 0-255 
+# value 
+
+# we will use a subset of training data here and not the full 60,000. i would like to test this at a later date with the full dataset to see if 
+# the results are any different purely out of curiousity 
+
+training_sample, test_sample = 1000, 1000 # here is the subset of 1000 images out of the 60,000 and 10,000 in total, respectively
+
+# take the n samples, where n = training_sample, and divide each pixel value by 255 to get the intensity, note that this is what is changing 
+# the data type to float64 
+
+training_images = x_train[0:training_sample] / 255
+test_images = x_test[0:test_sample] / 255
+
+print(len(training_images)) # 1000
+print(training_images.shape) # 1000, 784 
+
+print(training_images[0])
+
+
+fig, ax = plt.subplots()
+ax.imshow(training_images[0].reshape(28,28), cmap="grey")
+# plt.show()
+
+# we now know the first image in the dataset looks like a 5.
+
+## New Concept ##
+
+# One Hot Encoding is a way of storing labels as numbers without any label being seen as greater than any other label.
+# For example, since in the mnist dataset we have 10 possible labels, 0-9, we can represent a number this way: 
+# 1 = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+# 9 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+
+# very useful for the machine learning algorithm to make predictions, since we can have probabilities in this matrix: 
+
+# [0.01, 0.02, 0.05, 0.90, 0.01, 0.00, 0.00, 0.00, 0.01, 0.00] this would be saying that we are 90% sure the number is a three
+# we then compare this against the actual label, which might be: 
+# [0, 0, 0, 1, 0, 0, 0, 0, 0, 0] if the number genuinely is a 3 
+
+# the algorithm will compare the prediction to the target and use this to adjust weights later on 
+
+# one hot encoding function 
+def one_hot_encoding(labels, dimension=10):
+    # Define a one-hot variable for an all-zero vector
+    # with 10 dimensions (number labels from 0 to 9).
+    one_hot_labels = labels[..., None] == np.arange(dimension)[None]
+    # Return one-hot encoded labels.
+    return one_hot_labels.astype(np.float64)
+
+# labels = NumPy array of integer labels 
+# dimensions = ten possible classes (0-9)
+
+# use one hot encoding on both the training and test labels 
+
+# take the y's since these are the labels matched to the images (the x's)
+training_labels = one_hot_encoding(y_train[:training_sample]) # passing in the subset of training labels and hot encoding them 
+test_labels = one_hot_encoding(y_test[:training_sample]) # again taking the subset of n = 1000 at the time of writing
+
+
+
+# x_train links with y_train as a key value pair, and the same for the other pair 
+
+# print(training_labels[0]) # e.g print the first label in the training set as one hot encoding - we see it is a 5 if we toggle the 6th value (5)
+
+# building the network # 
+
+seed = 884736743
+rng = np.random.default_rng(seed)
+
+def relu(x):
+    return (x >= 0 ) * x 
+    # inner bracket is simply returning zero unless the value is larger than zero
+    # e.g if the input is three, 1 is output.
+
+    # the inner bracket is the boolean part, since this comparison will give us a new 
+    # array built of true and false
+    # then when we multiply the booleans by numbers, where 0 is false and 1 is true 
+
+    # all we are doing is toggling the positives. any positive nonzero stays, else its a 0
+
+x = np.array([ -3, 1, 3, 6, 8, 0])
+
+print(x)
+print(relu(x))
 
