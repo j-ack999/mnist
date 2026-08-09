@@ -82,3 +82,5 @@ plt.show()
 
 # fig is the whole output and axes are the individual sub plots within the figure. like the randomly picked numbers 
 
+# section 2. is next
+
