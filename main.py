@@ -100,7 +100,7 @@ rng = np.random.default_rng(seed)
 # we will use a subset of training data here and not the full 60,000. i would like to test this at a later date with the full dataset to see if 
 # the results are any different purely out of curiousity 
 
-training_sample, test_sample = 1000, 1000 # here is the subset of 1000 images out of the 60,000 and 10,000 in total, respectively
+training_sample, test_sample = 10, 10 # here is the subset of 1000 images out of the 60,000 and 10,000 in total, respectively
 
 # take the n samples, where n = training_sample, and divide each pixel value by 255 to get the intensity, note that this is what is changing 
 # the data type to float64 
@@ -150,7 +150,7 @@ def one_hot_encoding(labels, dimension=10):
 
 # take the y's since these are the labels matched to the images (the x's)
 training_labels = one_hot_encoding(y_train[:training_sample]) # passing in the subset of training labels and hot encoding them 
-test_labels = one_hot_encoding(y_test[:training_sample]) # again taking the subset of n = 1000 at the time of writing
+test_labels = one_hot_encoding(y_test[:test_sample]) # again taking the subset of n = 1000 at the time of writing
 
 
 
@@ -193,14 +193,14 @@ def relu2deriv(output):
 # input layer (784) -> hidden layer (100) -> output layer (10)
 
 #logic? 
-# one neurone for each input pixel and one choice is generated at the output layer, that is, 0-9. hidden layer neurone count is simply a sweet spot for the problem, 
+# one neurone for each input pixel and one choice is generated at the output layer, that is, 0-9. shidden layer neurone count is simply a sweet spot for the problem, 
 # it is not too large nor too small so we over or underfit to the problem. computing power is also considered here. 
 
 # hyperparameters #
 
 learning_rate = 0.005 # the learning rate determines how much the algo updates weights. too much and you overshoot the target and too little may take a very long time
 # default learning rate is 0.005
-epochs = 100 # the number of complete passes of data through the network 
+epochs = 20 # the number of complete passes of data through the network 
 hidden_size = 125 # amount of neurones in the hidden layer of the network, not trivial, more a sweet spot 
 pixels_per_image  = 784 # amount of pixels in one image, 28 x 28 
 num_labels = 10 # number of possible labels for each image (0-9) -> used in the prediction stage of the network 
@@ -356,6 +356,9 @@ hyperparameters = {
     "hidden_size" : hidden_size, 
     "pixels_per_image"  : pixels_per_image, 
     "num_labels" : num_labels,
+    "Training Data Subset" : training_sample,
+    "Test Data Subset" : test_sample,
+
 }
 
 # Display the plots.
@@ -382,3 +385,9 @@ for i, (name, value) in enumerate(hyperparameters.items()):
 
 plt.show()
 
+
+
+# 0.005 LR with 125 hidden layers and 20 epochs gives a final training set accuracy of 0.831 and a test set accuracy of 0.777 - this is trained on
+# a subset of the data such that we use 1000 and 1000 ( training test )
+
+# lets see what happens if we increase the training data from 1000 images to 10,000
